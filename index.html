@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистратор доменов Sovbb</title>
+  
+  <!-- Material Icons & Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    :root {
+      --comm-red: #D32F2F;        /* Глубокий красный */
+      --comm-red-dark: #9A0007;   /* Тёмный акцент */
+      --comm-gold: #FFD700;       /* Золотистый */
+      --gray-root: #B0BEC5;       /* Серый для /root */
+      --bg-color: #121212;        /* Тёмный фон Material Design */
+      --surface-color: #1E1E1E;   /* Карточка */
+      --text-main: #FFFFFF;
+      --text-muted: #B0BEC5;
+      --border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Карточка Material Design 2 */
+    .card {
+      position: relative;
+      background-color: var(--surface-color);
+      width: 100%;
+      max-width: 560px;
+      border-radius: 12px;
+      padding: 36px 28px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      border-top: 4px solid var(--comm-red);
+      text-align: center;
+    }
+
+    /* Овальная плашка выбора языка (Pill Button) */
+    .lang-pill-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 6px 14px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+    }
+
+    .lang-pill-btn:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: var(--comm-gold);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .lang-pill-btn .material-icons {
+      font-size: 18px;
+      color: var(--comm-gold);
+      pointer-events: none;
+    }
+
+    .lang-select {
+      background: transparent;
+      color: var(--text-main);
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 12px;
+    }
+
+    .lang-pill-btn::after {
+      content: '▼';
+      font-size: 8px;
+      color: var(--text-muted);
+      position: absolute;
+      right: 12px;
+      pointer-events: none;
+    }
+
+    .lang-select option {
+      background-color: var(--surface-color);
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* Логотип */
+    .logo-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    .logo-symbol {
+      color: var(--comm-gold);
+      font-size: 28px;
+      margin-right: 8px;
+      transform: rotate(-10deg);
+    }
+
+    .logo-sov {
+      color: var(--comm-red);
+      text-shadow: 0 0 2px rgba(211, 47, 47, 0.4);
+    }
+
+    .logo-bb {
+      color: var(--comm-gold);
+      text-shadow: 0 0 2px rgba(255, 215, 0, 0.4);
+    }
+
+    .logo-root {
+      color: var(--gray-root);
+      font-weight: 500;
+      -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Бейдж домена */
+    .domain-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(211, 47, 47, 0.15);
+      color: var(--comm-gold);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    /* Информационный блок */
+    .info-block {
+      text-align: left;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 28px;
+      border-left: 3px solid var(--comm-gold);
+    }
+
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--comm-gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .info-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-text strong {
+      color: var(--text-main);
+    }
+
+    /* Кнопка */
+    .btn-portal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background-color: var(--comm-red);
+      color: var(--comm-gold);
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+    .btn-portal:hover {
+      background-color: var(--comm-red-dark);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-portal:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-portal .material-icons {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Овальная плашка выбора языка -->
+    <div class="lang-pill-btn">
+      <span class="material-icons">language</span>
+      <select id="lang-select" class="lang-select" onchange="changeLanguage(this.value)">
+        <option value="ru">RU</option>
+        <option value="be">BY</option>
+        <option value="uk">UA</option>
+        <option value="kk">KZ</option>
+        <option value="uz">UZ</option>
+        <option value="az">AZ</option>
+        <option value="hy">AM</option>
+        <option value="de">DE</option>
+        <option value="fr">FR</option>
+        <option value="no">NO</option>
+        <option value="en">EN</option>
+      </select>
+    </div>
+
+    <!-- Логотип -->
+    <div class="logo-container">
+      <span class="material-icons logo-symbol">star</span>
+      <span class="logo-sov">sov</span><span class="logo-bb">bb</span><span class="logo-root">/root</span>
+    </div>
+
+    <!-- Текущий домен -->
+    <div class="domain-badge">
+      <span class="material-icons" style="font-size: 18px;">public</span>
+      <span id="current-domain">Загрузка...</span>
+    </div>
+
+    <!-- Информационный блок -->
+    <div class="info-block">
+      <div class="info-title">
+        <span class="material-icons" style="font-size: 18px;">dns</span>
+        <span id="txt-title">Сетевая Инфраструктура</span>
+      </div>
+      <p class="info-text" id="txt-p1">
+        Этот адрес является частью народной доменной сети и обслуживается платформой <strong>sovbb</strong>.
+      </p>
+      <p class="info-text" id="txt-p2">
+        Мы предоставляем надежные доменные имена 3-го и 4-го уровня для марксистов, энтузиастов, коллективных проектов и свободных разработчиков. Все ресурсы объединяются в общую независимую сеть.
+      </p>
+    </div>
+
+    <!-- Кнопка перехода -->
+    <a href="https://sov.bbroot.com" class="btn-portal">
+      <span id="txt-btn">Зарегистрировать свой!</span>
+      <span class="material-icons">add_link</span>
+    </a>
+  </div>
+
+  <script>
+    const translations = {
+      ru: {
+        title: "Сетевая Инфраструктура",
+        p1: "Этот адрес является частью народной доменной сети и обслуживается платформой <strong>sovbb</strong>.",
+        p2: "Мы предоставляем надежные доменные имена 3-го и 4-го уровня для марксистов, энтузиастов, коллективных проектов и свободных разработчиков. Все ресурсы объединяются в общую независимую сеть.",
+        btn: "Зарегистрировать свой!"
+      },
+      be: {
+        title: "Сеткавая Інфраструктура",
+        p1: "Гэта адрас з'яўляецца часткай народнай даменнай сеткі і абслугоўваецца платформай <strong>sovbb</strong>.",
+        p2: "Мы прадстаўляем надзейныя даменныя імёны 3-га і 4-га ўзроўню для марксістаў, энтузіястаў, калектыўных праектаў і свабодных распрацоўшчыкаў.",
+        btn: "Зарэгістраваць сваё!"
+      },
+      uk: {
+        title: "Мережева Інфраструктура",
+        p1: "Ця адреса є частиною народної доменної мережі та обслуговується платформою <strong>sovbb/root</strong>.",
+        p2: "Ми надаємо надійні доменні імена 3-го та 4-го рівня для марксистів, ентузіастів, колективних проектів та вільних розробників.",
+        btn: "Зареєструвати свій!"
+      },
+      kk: {
+        title: "Желілік Инфрақұрылым",
+        p1: "Бұл мекенжай халықтық домендік желінің бөлігі болып табылады және <strong>sovbb/root</strong> платформасымен қызмет көрсетіледі.",
+        p2: "Біз марксистер, әуесқойлар, ұжымдық жобалар мен еркін әзірлеушілер үшін 3-ші және 4-ші деңгейдегі сенімді домендік атауларды ұсынамыз.",
+        btn: "Өз доменіңізді тіркеңіз!"
+      },
+      uz: {
+        title: "Tarmoq Infratuzilmasi",
+        p1: "Ushbu manzil xalq domen tarmog'ining bir qismi bo'lib, <strong>sovbb/root</strong> platformasi tomonidan boshqariladi.",
+        p2: "Biz marksistlar, ishqibozlar, jamoaviy loyihalar va erkin dasturchilar uchun 3-chi va 4-chi darajali ishonchli domen nomlarini taqdim etamiz.",
+        btn: "O'zingiznikini ro'yxatdan o'tkazing!"
+      },
+      az: {
+        title: "Şəbəkə İnfrastrukturu",
+        p1: "Bu ünvan xalq domen şəbəkəsinin bir hissəsidir və <strong>sovbb/root</strong> platforması tərəfindən idarə olunur.",
+        p2: "Marksistler, həvəskarlar, kollektiv layihələr və azad tərtibatçılar üçün 3-cü və 4-cü səviyyəлі etibarlı domen adları təqdim edirik.",
+        btn: "Özününkünü qeydiyyatdan keçir!"
+      },
+      hy: {
+        title: "Ցանցային Ենթակառուցվածք",
+        p1: "Այս հասցեն ժողովրդական դոմենային ցանցի մաս է կազմում և սպասարկվում է <strong>sovbb/root</strong> հարթակի կողմից։",
+        p2: "Մենք տրամադրում ենք 3-րդ և 4-րդ մակարդակի հուսալի դոմենային անուններ մարքսիստների, էնտուզիաստների, հավաքական նախագծերի և ազատ ծրագրավորողների համար։",
+        btn: "Գրանցել սեփականը!"
+      },
+      de: {
+        title: "Netzwerkinfrastruktur",
+        p1: "Diese Adresse ist Teil des Volksdomain-Netzwerks und wird von der Plattform <strong>sovbb/root</strong> betrieben.",
+        p2: "Wir bieten zuverlässige Domainnamen der 3. und 4. Ebene für Marxisten, Enthusiasten, Gemeinschaftsprojekte und freie Entwickler.",
+        btn: "Eigenen registrieren!"
+      },
+      fr: {
+        title: "Infrastructure Réseau",
+        p1: "Cette adresse fait partie du réseau de domaines populaire et est gérée par la plateforme <strong>sovbb/root</strong>.",
+        p2: "Nous fournissons des noms de domaine fiables de 3ème et 4ème niveau pour les marxistes, les passionnés, les projets collectifs et les développeurs libres.",
+        btn: "Enregistrer le vôtre!"
+      },
+      no: {
+        title: "Nettverksinfrastruktur",
+        p1: "Denne adressen er en del av det folkelige domenenettverket og drives av plattformen <strong>sovbb/root</strong>.",
+        p2: "Vi tilbyr pålitelige domenenavn på 3. og 4. nivå for marxister, entusiaster, kollektive prosjekter og frie utviklere.",
+        btn: "Registrer ditt eget!"
+      },
+      en: {
+        title: "Network Infrastructure",
+        p1: "This domain address is part of the community domain network operated by <strong>sovbb</strong>.",
+        p2: "We provide reliable 3rd and 4th-level domain names for Marxists, enthusiasts, community projects, and independent developers within an open infrastructure.",
+        btn: "Register your own!"
+      }
+    };
+
+    function changeLanguage(lang) {
+      if (!translations[lang]) lang = 'ru';
+      
+      document.getElementById('txt-title').innerText = translations[lang].title;
+      document.getElementById('txt-p1').innerHTML = translations[lang].p1;
+      document.getElementById('txt-p2').innerHTML = translations[lang].p2;
+      document.getElementById('txt-btn').innerText = translations[lang].btn;
+      
+      document.getElementById('lang-select').value = lang;
+      localStorage.setItem('pref_lang', lang);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Подстановка домена
+      const domainSpan = document.getElementById("current-domain");
+      domainSpan.textContent = window.location.hostname || "localhost";
+
+      // Определение языка
+      const savedLang = localStorage.getItem('pref_lang');
+      const systemLangs = navigator.languages || [navigator.language || navigator.userLanguage];
+      let detectedLang = null;
+
+      for (let lang of systemLangs) {
+        const shortLang = lang.substring(0, 2).toLowerCase();
+        if (translations[shortLang]) {
+          detectedLang = shortLang;
+          break;
+        }
+      }
+
+      if (savedLang && translations[savedLang]) {
+        changeLanguage(savedLang);
+      } else if (detectedLang) {
+        changeLanguage(detectedLang);
+      } else {
+        changeLanguage('ru');
+      }
+    });
+  </script>
+
+</body>
+  </html>
+  
